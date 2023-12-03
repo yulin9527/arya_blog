@@ -46,8 +46,8 @@ TORTOISE_ORM = {
     },
     "apps": {
         "User": {"models": [
-            "app.db.models.users"
-            # "aerich.models"
+            "app.db.models.users",
+            "aerich.models"
         ],
             "default_connection": "pgsql"},
         # "db2": {"models": ["models.db2"], "default_connection": "db2"},

@@ -33,4 +33,4 @@ fast_app.mount('/static', StaticFiles(directory=os.path.join(BASE_PATH, 'static'
 ui.run_with(fast_app, title='羽林')
 
 if __name__ == '__main__':
-    uvicorn.run(app='main:fast_app', port=8010, reload=True)
+    uvicorn.run(app='main:fast_app', port=8080, reload=True)
