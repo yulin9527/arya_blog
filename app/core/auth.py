@@ -20,12 +20,7 @@ def verify_password(plain_password, hashed_password):
     :param hashed_password: 哈希后的密码
     :return: bool  校验成功返回True,反之False
     """
-
-    # noinspection PyBroadException
-    # try:
     return pwd_context.verify(plain_password, hashed_password)
-    # except Exception:
-    #     return False
 
 
 def get_password_hash(password):
@@ -68,27 +63,29 @@ def create_access_token(data: dict, expires_delta: int = ACCESS_TOKEN_EXPIRE_MIN
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
-async def check_jwt_token(token: str = Cookie(default='')) -> Union[User, None]:
+async def check_jwt_token(token: str = Depends(oauth2_scheme)) -> Union[User, None]:
     """
     验证token
     :param token: 浏览器取到的一个字符串的值
     :return: 用户
     """
+    credentials_exception = HTTPException(code=status.HTTP_401_UNAUTHORIZED, msg='token验证失败',
+                                          headers={"WWW-Authenticate": "Bearer"})
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     except JWTError:
-        raise HTTPException(code=status.HTTP_401_UNAUTHORIZED, msg='token验证失败')
+        raise credentials_exception
     account: str = payload.get('sub')
-    if user := await User.get_or_none(account=account):
-        if datetime.now() + timedelta(minutes=60 * 12) > datetime.fromtimestamp(payload.get('exp')):
-            # 过期时间小于10分钟,刷新token
-            access_token = create_access_token(data={'sub': user.username})
-            response = Response()
-            response.set_cookie(key='token', value=access_token)
-            await Token.update_or_create(defaults={'token': access_token}, user=user)
+    if user := await User.get_or_none(account=account, token__token=token):
         return user
+        # if datetime.now() + timedelta(minutes=60 * 12) > datetime.fromtimestamp(payload.get('exp')):
+        # # 过期时间小于10分钟,刷新token
+        # access_token = create_access_token(data={'sub': user.username})
+        # response = Response()
+        # response.set_cookie(key='token', value=access_token)
+        # await Token.update_or_create(defaults={'token': access_token}, user=user)
     else:
-        raise HTTPException(code=status.HTTP_401_UNAUTHORIZED, msg='token验证成功,用户查找失败')
+        raise credentials_exception
 
 
 async def get_current_active_user(current_user: User = Depends(check_jwt_token)):

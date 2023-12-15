@@ -2,7 +2,7 @@ from typing import Union
 
 from fastapi import APIRouter, Depends
 
-from app.api.user_api.login import register, login
+from app.api.user_api.login import register, login_for_access_token
 from app.api.user_api.user import *
 from app.core.auth import get_current_active_user
 
@@ -18,7 +18,7 @@ user_router = APIRouter(
 )
 
 login_router.post('/register', summary='用户注册')(register)
-login_router.post('/login', summary='用户登录')(login)
+login_router.post('/token', summary='获取 token')(login_for_access_token)
 # login_router.post('/send_sms', summary='获取验证码')(send_sms)
 
 user_router.delete('/logout', summary='退出登录')(logout)

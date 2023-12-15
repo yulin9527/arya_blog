@@ -2,7 +2,7 @@ import time
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
-from starlette.responses import Response
+from starlette.responses import Response, RedirectResponse
 
 from app.settings import origins
 
@@ -30,4 +30,7 @@ class ProcessTimeMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
         process_time = time.time() - start_time
         response.headers["X-Process-Time"] = f'{str(process_time)}'
+        # # 认证失败,跳转到登录页面 前端端分离,重定向由前端完成
+        # if response.status_code == 401:
+        #     return RedirectResponse('/login')
         return response

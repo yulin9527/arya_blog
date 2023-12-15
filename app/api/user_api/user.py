@@ -9,11 +9,9 @@ from app.db.schemas.user_schemas import UserOut
 async def logout(response: Response, user: User = Depends(get_current_active_user)):
     """
     退出登录
-    退出时删除浏览器cookie中的token值
-    同时,将数据库中,用户的token的值设为空
+    数据库中,用户的token的值设为空
     """
-    response.delete_cookie(key='token')
-    await Token.filter(pk=user.pk).update(token=None)
+    await Token.filter(user_id=user.pk).update(token=None)
     return '操作成功'
 
 

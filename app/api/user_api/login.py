@@ -26,14 +26,11 @@ async def register(user: Login = Body(), code: str = Body(default=None), ):
     return await UserOut.from_tortoise_orm(user_obj)
 
 
-async def login(user_data: OAuth2PasswordRequestForm = Depends()):
+async def login_for_access_token(user_data: OAuth2PasswordRequestForm = Depends()):
     if user := await authenticate_user(account=user_data.username, password=user_data.password):
         # 创建token
         access_token = create_access_token(data={'sub': user.account})
         await Token.update_or_create(defaults={'token': access_token}, user=user)
-        # 将token写入到浏览器cookie中
-        response = Response()
-        response.set_cookie(key='token', value=access_token)
-        return response
+        return {"token_type": "bearer", "access_token": access_token}
     else:
         raise HTTPException(msg='用户名或密码错误')

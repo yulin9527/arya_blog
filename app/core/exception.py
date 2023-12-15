@@ -1,16 +1,16 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError, ResponseValidationError
 from fastapi.responses import JSONResponse
-from starlette.requests import Request
 
 
 class HTTPException(Exception):
     """
     主动抛出异常返回
     """
-    def __init__(self, code: int = 400, msg: str = '请求发生错误,请核对'):
+    def __init__(self, code: int = 400, msg: str = '请求发生错误,请核对', headers=None):
         self.msg = msg
         self.code = code
+        self.headers = headers
 
 
 class FastAPIException:
@@ -23,20 +23,21 @@ class FastAPIException:
         app.add_exception_handler(ResponseValidationError, handler=self._response_validation_error)
 
     @staticmethod
-    async def _request_validation_error(request, exc: RequestValidationError):
-        print(request)
+    async def _request_validation_error(request: Request, exc: RequestValidationError):
+
         data = exc.errors()
-        print(data)
+
         msg_list = []
         for details in data:
             par_type = details['loc'][0]
             par_name = details['loc'][1]
-            print(details['msg'])
             match details['type']:
                 case 'missing':
                     msg_list.append(f'{par_type} 中 {par_name} 参数不能为空')
                 case 'string_too_short':
                     msg_list.append(f'{par_type} 中 {par_name} 长度不符合要求')
+                case 'string_type':
+                    msg_list.append(f'{par_type} 中 {par_name} 应该是一个有效的字符串 ')
                 case '-':
                     msg_list.append('未知错误,代核对')
         return JSONResponse(
@@ -49,7 +50,8 @@ class FastAPIException:
         print(request.url)
         return JSONResponse(
             status_code=exc.code,
-            content=exc.msg
+            content=exc.msg,
+            headers=exc.headers
         )
 
     @staticmethod
