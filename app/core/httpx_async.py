@@ -38,3 +38,28 @@ class AsyncHttpX:
             # if response.status_code == 400:
             #     ui.open('/')
             return response
+
+    async def get(self, url: URLTypes,
+                  *,
+                  params: typing.Optional[QueryParamTypes] = None,
+                  headers: typing.Optional[HeaderTypes] = None,
+                  cookies: typing.Optional[CookieTypes] = None,
+                  auth: typing.Union[AuthTypes, UseClientDefault, None] = USE_CLIENT_DEFAULT,
+                  follow_redirects: typing.Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
+                  timeout: typing.Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
+                  extensions: typing.Optional[RequestExtensions] = None, ):
+        async with AsyncClient(app=self.app, base_url='http://test') as ac:
+            if not headers:
+                headers = dict()
+            headers['Authorization'] = nice_app.storage.user.setdefault('token', '')
+            response: Response = await ac.get(url=url,
+                                              params=params,
+                                              headers=headers,
+                                              cookies=cookies,
+                                              auth=auth,
+                                              follow_redirects=follow_redirects,
+                                              timeout=timeout,
+                                              extensions=extensions)
+            # if response.status_code == 400:
+            #     ui.open('/')
+            return response

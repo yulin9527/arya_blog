@@ -1,6 +1,3 @@
-import httpx
-import pytest
-from httpx import AsyncClient
 from nicegui import ui
 from nicegui import app as nice_app
 
@@ -8,16 +5,15 @@ from app import client
 
 
 async def on_log(account, password, button):
-    print(account, password)
-    nice_app.storage.user['token'] = ''
     user = await client.post('/token', data={'username': account, "password": password})
     if user.status_code == 200:
-        print(user.json())
         data = user.json()
         token = f"{data['token_type']} {data['access_token']}"
         nice_app.storage.user['token'] = token
+        nice_app.storage.user['id'] = data['user_id']
         ui.open('/')
-    print(user.status_code)
+    else:
+        button.text = '重新登录'
 
 
 def login_page():

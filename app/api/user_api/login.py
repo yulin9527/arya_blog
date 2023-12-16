@@ -31,6 +31,6 @@ async def login_for_access_token(user_data: OAuth2PasswordRequestForm = Depends(
         # 创建token
         access_token = create_access_token(data={'sub': user.account})
         await Token.update_or_create(defaults={'token': access_token}, user=user)
-        return {"token_type": "bearer", "access_token": access_token}
+        return {"token_type": "bearer", "access_token": access_token, "user_id": user.pk}
     else:
         raise HTTPException(msg='用户名或密码错误')

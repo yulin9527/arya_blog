@@ -47,6 +47,7 @@ TORTOISE_ORM = {
     "apps": {
         "User": {"models": [
             "app.db.models.users",
+            "app.db.models.pages",
             "aerich.models"
         ],
             "default_connection": "pgsql"},
