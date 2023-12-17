@@ -1,8 +1,14 @@
 from nicegui import ui
 
+from app.view.element.article import editor_car, top_article
+
 
 async def main_page():
-    ui.label('首页124')
+    top_article()
+    editor_car()
+
+    ui.markdown(
+        """可以使用循环来计算1到1000的和，示例代码如下：\n\n```python\ntotal = 0\n\nfor i in range(1, 1001):\n    total += i\n\nprint(total)\n```\n\n在这个示例中，我们使用了一个循环来遍历1到1000的数，并对它们进行累加，最后输出总和。""")
 
     def set_background(color: str) -> None:
         ui.query('body').style(f'background-color: {color}')  # 这句是关键，设置body的style
@@ -37,9 +43,11 @@ async def main_page():
 
 def personal_info():
     # 头像小组件
-    with ui.card().classes('w-max'):
+    with ui.card().classes('w-full'):
         with ui.row():
+            # ui.avatar('img:/static/head_img/arya.jpg', square=True, rounded=False, size='xl').classes('no-margin')
             ui.image('/static/head_img/arya.jpg').classes('w-16').style('border-radius:10px')
+            # ui.image('/static/head_img/arya.jpg').classes('w-16').style('border-radius:10px')
             with ui.column():
                 ui.label('羽林').style(
                     'font-weight:bold; font-size:18px;width:100%; text-align: center;')
@@ -65,6 +73,7 @@ def left_path_home():
         ui.label('相册')
         ui.label('日记')
         ui.label('关于')
+
 
 def left_title():
     with ui.card().tight().classes('w-full'):
