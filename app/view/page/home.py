@@ -1,14 +1,12 @@
 from nicegui import ui
-
 from app.view.element.article import editor_car, top_article
+from app.view.element.message import openai_msg
 
 
 async def main_page():
     top_article()
     editor_car()
 
-    ui.markdown(
-        """可以使用循环来计算1到1000的和，示例代码如下：\n\n```python\ntotal = 0\n\nfor i in range(1, 1001):\n    total += i\n\nprint(total)\n```\n\n在这个示例中，我们使用了一个循环来遍历1到1000的数，并对它们进行累加，最后输出总和。""")
 
     def set_background(color: str) -> None:
         ui.query('body').style(f'background-color: {color}')  # 这句是关键，设置body的style
@@ -20,7 +18,7 @@ async def main_page():
     [ui.label(f'Line {i}') for i in range(100)]
     with ui.header(elevated=True).classes('items-center justify-between'):  # .style('background-color: #3874c8')
         ui.button(on_click=lambda: left_drawer.toggle(), icon='menu').props('flat color=white')
-        ui.button(on_click=lambda: right_drawer.toggle(), icon='menu').props('flat color=white')
+        ui.button(on_click=lambda: right_drawer.toggle(), icon='rocket_launch').props('flat color=white')
 
     with ui.left_drawer(top_corner=False, bottom_corner=False) as left_drawer:  # .style('background-color: #d7e3f4')
         personal_info()
@@ -36,7 +34,7 @@ async def main_page():
                 ui.button('登录')
     with ui.right_drawer(fixed=False, top_corner=True).props(
             'bordered') as right_drawer:  # .style('background-color: #ebf1fa')
-        ui.label('RIGHT DRAWER')
+        openai_msg()
     with ui.footer():  # .style('background-color: #3874c8')
         ui.label('FOOTER')
 

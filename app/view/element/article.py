@@ -1,8 +1,6 @@
 from nicegui import ui
 
-"""
-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
-"""
+
 def top_article():
     """
     置顶轮播图

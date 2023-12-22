@@ -25,7 +25,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7
 # 生成token的加密算法
 ALGORITHM: str = "HS256"
 # JWT令牌随机密钥,用于对jwt令牌进行签名  生成方式 openssl rand -hex 32
-SECRET_KEY: str = os.getenv('SECRET_KEY', 'f09b6e3fa7b71df48c922b20d3c225fc43fd91c23536e5291c64175db1b2fd88')
+SECRET_KEY: str = os.getenv('SECRET_KEY', )
 
 # 项目根路径
 BASE_PATH: str = os.path.dirname(os.path.abspath(__file__))

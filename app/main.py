@@ -24,13 +24,13 @@ FastAPIException(fast_app)
 # 接口调用
 client = AsyncHttpX(fast_app)
 
+
 # 静态文件
 fast_app.mount('/static', StaticFiles(directory=os.path.join(BASE_PATH, 'static')), name='static')
 
 # 挂接 nicegui 应用
 ui.run_with(fast_app, title='羽林', storage_secret='arya')
 
-demo = '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'
 
 if __name__ == '__main__':
-    uvicorn.run(app='main:fast_app', host='192.168.182.251', port=8080, reload=True)
+    uvicorn.run(app='main:fast_app', host='192.168.27.251', port=8080, reload=True)
