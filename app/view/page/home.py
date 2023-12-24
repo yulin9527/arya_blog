@@ -4,39 +4,51 @@ from app.view.element.message import openai_msg
 
 
 async def main_page():
-    top_article()
-    editor_car()
-
-
-    def set_background(color: str) -> None:
-        ui.query('body').style(f'background-color: {color}')  # 这句是关键，设置body的style
-
-    ui.image('/static/head_img/arya.jpg').classes('w-16')
-    ui.button('Blue', on_click=lambda: set_background('#ddeeff'))  # 点击后，页面背景颜色变为蓝色
-    ui.button('Orange', on_click=lambda: set_background('#ffeedd'))  # 点击后，页面背景颜色变为橙色
-    # ui.label('CONTENT')
-    [ui.label(f'Line {i}') for i in range(100)]
-    with ui.header(elevated=True).classes('items-center justify-between'):  # .style('background-color: #3874c8')
+    """
+    主页布局
+    """
+    with ui.header(elevated=True).classes('items-center justify-between'):
         ui.button(on_click=lambda: left_drawer.toggle(), icon='menu').props('flat color=white')
         ui.button(on_click=lambda: right_drawer.toggle(), icon='rocket_launch').props('flat color=white')
-
-    with ui.left_drawer(top_corner=False, bottom_corner=False) as left_drawer:  # .style('background-color: #d7e3f4')
+    with ui.left_drawer(top_corner=False, bottom_corner=False) as left_drawer:
         personal_info()
-        left_path_home()
-        essay_class(essay_list)
-        ui.separator()
-        ui.separator()
-        with ui.card():
-            with ui.row():
-                ui.button('主页')
-                ui.button('评论')
-                ui.button('github')
-                ui.button('登录')
-    with ui.right_drawer(fixed=False, top_corner=True).props(
-            'bordered') as right_drawer:  # .style('background-color: #ebf1fa')
         openai_msg()
-    with ui.footer():  # .style('background-color: #3874c8')
-        ui.label('FOOTER')
+
+    with ui.right_drawer(fixed=True, top_corner=False, bottom_corner=False).props(
+            'bordered').props('width=400') as right_drawer:
+        ui.button(on_click=lambda: right_drawer.toggle())
+        openai_msg()
+
+    top_article()
+    top_article()
+    top_article()
+
+    # editor_car()
+    #
+    # def set_background(color: str) -> None:
+    #     ui.query('body').style(f'background-color: {color}')  # 这句是关键，设置body的style
+    #
+    # ui.image('/static/head_img/arya.jpg').classes('w-16')
+    # ui.button('Blue', on_click=lambda: set_background('#ddeeff'))  # 点击后，页面背景颜色变为蓝色
+    # ui.button('Orange', on_click=lambda: set_background('#ffeedd'))  # 点击后，页面背景颜色变为橙色
+    # # ui.label('CONTENT')
+    # [ui.label(f'Line {i}') for i in range(100)]
+    #
+
+    #     personal_info()
+    #     left_path_home()
+    #     essay_class(essay_list)
+    #     ui.separator()
+    #     ui.separator()
+    #     with ui.card():
+    #         with ui.row():
+    #             ui.button('主页')
+    #             ui.button('评论')
+    #             ui.button('github')
+    #             ui.button('登录')
+
+    # with ui.footer():  # .style('background-color: #3874c8')
+    #     ui.label('FOOTER')
 
 
 def personal_info():
@@ -52,7 +64,7 @@ def personal_info():
                 ui.label('What are you prepared to do?').style('font-size:12px;font-style:italic')
 
 
-essay_list = ['分类1', '分类 2', '分类 3']
+essay_list = ['分类1', '分类 2', '分类 3'] * 30
 
 
 def essay_class(essay_list):
@@ -72,8 +84,3 @@ def left_path_home():
         ui.label('日记')
         ui.label('关于')
 
-
-def left_title():
-    with ui.card().tight().classes('w-full'):
-        for i in []:
-            pass
